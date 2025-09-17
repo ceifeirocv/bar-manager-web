@@ -7,6 +7,35 @@ import { revalidateTag } from "next/cache";
 
 const AUTH_API_URL = process.env.AUTH_API_URL || "http://localhost:3001";
 
+// Type definitions based on API response
+export interface Session {
+  expiresAt: string;
+  token: string;
+  createdAt: string;
+  updatedAt: string;
+  ipAddress: string;
+  userAgent: string;
+  userId: string;
+  id: string;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
+  displayUsername: string;
+  id: string;
+}
+
+export interface AuthResponse {
+  session: Session;
+  user: User;
+}
+
 // Helper function to parse Set-Cookie header
 function parseSetCookieHeader(setCookieHeader: string) {
   const cookies = setCookieHeader.split(",").map((cookie) => cookie.trim());
@@ -166,7 +195,7 @@ export async function signupAction(formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function getServerSession() {
+export async function getServerSession(): Promise<AuthResponse | null> {
   const cookieStore = await cookies();
 
   try {
@@ -178,8 +207,10 @@ export async function getServerSession() {
       next: { revalidate: 30, tags: ["session"] }, // Important for server components
     });
 
+    console.log({ response });
+
     if (response.ok) {
-      const session = await response.json();
+      const session: AuthResponse = await response.json();
       return session?.session ? session : null;
     }
   } catch (error) {
@@ -189,7 +220,7 @@ export async function getServerSession() {
   return null;
 }
 
-export async function requireAuth() {
+export async function requireAuth(): Promise<AuthResponse> {
   const session = await getServerSession();
 
   if (!session) {
@@ -199,7 +230,7 @@ export async function requireAuth() {
   return session;
 }
 
-export async function getUser() {
+export async function getUser(): Promise<User | null> {
   const session = await getServerSession();
   return session?.user || null;
 }
