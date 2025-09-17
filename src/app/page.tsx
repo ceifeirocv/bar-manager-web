@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -7,12 +9,15 @@ export default function Home() {
       <p className="text-lg text-center">
         Manage your bar like a pro with our intuitive interface.
       </p>
-      <Image
+      {/* <Image
         src="/images/bar-manager-logo.png"
         alt="Bar Manager Logo"
         width={200}
         height={200}
-      />
+      /> */}
+      <Link href="/login">
+        <Button size="lg">Get Started</Button>
+      </Link>
       <footer className="text-sm text-gray-500">
         © {new Date().getFullYear()} Bar Manager. All rights reserved.
       </footer>

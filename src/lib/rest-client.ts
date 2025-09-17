@@ -1,4 +1,5 @@
 // lib/rest-client.ts
+import { cookies } from "next/headers";
 
 interface RequestConfig extends RequestInit {
   params?: Record<string, string | number | boolean>;
@@ -21,9 +22,22 @@ class RestClient {
     };
   }
 
-  private getAuthHeaders(): HeadersInit {
-    const token = process.env.CMS_ACCESS_TOKEN;
-    return token ? { authorization: `Bearer ${token}` } : {};
+  private async getAuthHeaders(): Promise<HeadersInit> {
+    try {
+      const cookieStore = await cookies();
+
+      // Get all cookies and format them for the request
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((cookie) => `${cookie.name}=${cookie.value}`)
+        .join("; ");
+
+      return cookieHeader ? { Cookie: cookieHeader } : {};
+    } catch (error) {
+      // Handle cases where cookies() might not be available
+      console.warn("Failed to get cookies:", error);
+      return {};
+    }
   }
 
   private buildUrl(
@@ -48,10 +62,11 @@ class RestClient {
     const { params, ...requestConfig } = config;
 
     const url = this.buildUrl(endpoint, params);
+    const authHeaders = await this.getAuthHeaders();
 
     const headers: HeadersInit = {
       ...this.defaultHeaders,
-      ...this.getAuthHeaders(),
+      ...authHeaders,
       ...requestConfig.headers,
     };
 
@@ -59,6 +74,7 @@ class RestClient {
       const response = await fetch(url, {
         ...requestConfig,
         headers,
+        credentials: "include", // Important for cookies
       });
 
       const data = await response.json();
@@ -153,11 +169,13 @@ class RestClient {
       });
     }
 
+    const authHeaders = await this.getAuthHeaders();
+
     return this.makeRequest<T>(endpoint, {
       method: "POST",
       body: formData,
       headers: {
-        ...this.getAuthHeaders(),
+        ...authHeaders,
         // Don't set Content-Type for FormData, let browser set it with boundary
       },
     });
