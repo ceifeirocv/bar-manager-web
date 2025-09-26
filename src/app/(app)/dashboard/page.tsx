@@ -1,4 +1,4 @@
-import { logoutAction } from "@/app/actions/auth";
+import { logoutAction } from "@/app/actions/auth/auth";
 import { Button } from "@/components/ui/button";
 import React from "react";
 

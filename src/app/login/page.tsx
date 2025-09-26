@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
-import { getServerSession } from "../actions/auth";
+import { getServerSession } from "../actions/auth/auth";
 
 export default async function LoginPage() {
   const session = await getServerSession();

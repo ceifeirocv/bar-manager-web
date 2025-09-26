@@ -4,37 +4,9 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { AuthResponse, LoginFormData, User } from "./types";
 
 const AUTH_API_URL = process.env.AUTH_API_URL || "http://localhost:3001";
-
-// Type definitions based on API response
-export interface Session {
-  expiresAt: string;
-  token: string;
-  createdAt: string;
-  updatedAt: string;
-  ipAddress: string;
-  userAgent: string;
-  userId: string;
-  id: string;
-}
-
-export interface User {
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-  username: string;
-  displayUsername: string;
-  id: string;
-}
-
-export interface AuthResponse {
-  session: Session;
-  user: User;
-}
 
 // Helper function to parse Set-Cookie header
 function parseSetCookieHeader(setCookieHeader: string) {
@@ -62,9 +34,8 @@ function parseSetCookieHeader(setCookieHeader: string) {
   return parsedCookies;
 }
 
-export async function loginAction(formData: FormData) {
-  const username = formData.get("username") as string;
-  const password = formData.get("password") as string;
+export async function loginAction(formData: LoginFormData) {
+  const { password, username } = formData;
 
   if (!username || !password) {
     return { error: "Username and password are required" };
@@ -206,8 +177,6 @@ export async function getServerSession(): Promise<AuthResponse | null> {
       cache: "force-cache",
       next: { revalidate: 30, tags: ["session"] }, // Important for server components
     });
-
-    console.log({ response });
 
     if (response.ok) {
       const session: AuthResponse = await response.json();

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { loginAction } from "@/app/actions/auth";
+import { useTransition } from "react";
+import { loginAction } from "@/app/actions/auth/auth";
 import {
   Card,
   CardHeader,
@@ -10,21 +10,32 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { LoginFormData, loginSchema } from "@/app/actions/auth/types";
 
 export function LoginForm() {
-  const [error, setError] = useState<string>("");
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (formData: FormData) => {
-    setError("");
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
+  const handleSubmit = async (formData: LoginFormData) => {
     startTransition(async () => {
       const result = await loginAction(formData);
 
       if (result?.error) {
-        setError(result.error);
+        form.setError("root", { message: result.error });
       }
     });
   };
@@ -39,40 +50,59 @@ export function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 text-sm text-red-800 bg-red-100 border border-red-300 rounded-md">
-                {error}
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              {form.formState.errors.root && (
+                <div className="p-3 text-sm text-red-800 bg-red-100 border border-red-300 rounded-md">
+                  {form.formState.errors.root.message}
+                </div>
+              )}
+              <FormField
+                control={form.control}
                 name="username"
-                type="text"
-                placeholder="Enter your username"
-                required
-                className="w-full"
-                disabled={isPending}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="w-full"
+                        placeholder="Enter your username"
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
+
+              <FormField
+                control={form.control}
                 name="password"
-                type="password"
-                placeholder="Enter your password"
-                required
-                className="w-full"
-                disabled={isPending}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Enter your password"
+                        className="w-full"
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </main>
