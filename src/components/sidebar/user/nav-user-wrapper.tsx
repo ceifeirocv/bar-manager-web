@@ -1,4 +1,4 @@
-import { getUser } from "@/app/actions/auth";
+import { getUser } from "@/app/actions/auth/auth";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { NavUser } from "./nav-user";
 

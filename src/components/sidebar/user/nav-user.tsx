@@ -9,7 +9,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { logoutAction, User } from "@/app/actions/auth";
+import { logoutAction, User } from "@/app/actions/auth/auth";
+import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
+import { getInitials } from "@/lib/utils";
 
 type NavUserProps = {
   user: User;
@@ -29,17 +31,6 @@ type NavUserProps = {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
-
-  // Helper function to get initials from name
-  const getInitials = (name: string) => {
-    const words = name.trim().split(/\s+/);
-    if (words.length === 0) return "";
-    if (words.length === 1) return words[0].charAt(0).toUpperCase();
-
-    const firstInitial = words[0].charAt(0).toUpperCase();
-    const lastInitial = words[words.length - 1].charAt(0).toUpperCase();
-    return firstInitial + lastInitial;
-  };
 
   const initials = getInitials(user.name);
 
@@ -91,9 +82,11 @@ export function NavUser({ user }: NavUserProps) {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck />
-            Account
+          <DropdownMenuItem asChild>
+            <Link href="/account">
+              <BadgeCheck />
+              Account
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard />
