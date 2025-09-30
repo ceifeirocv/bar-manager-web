@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 // Type definitions based on API response
 export const loginSchema = z.object({
