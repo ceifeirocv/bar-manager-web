@@ -8,6 +8,8 @@ import { AuthResponse, LoginFormData, User } from "./types";
 
 const AUTH_API_URL = process.env.AUTH_API_URL || "http://localhost:3001";
 
+console.log("AUTH_API_URL:", AUTH_API_URL);
+
 // Helper function to parse Set-Cookie header
 function parseSetCookieHeader(setCookieHeader: string) {
   const cookies = setCookieHeader.split(",").map((cookie) => cookie.trim());
