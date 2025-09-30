@@ -1,13 +1,11 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { User, Shield, Bell, Star } from "lucide-react";
 import { getUser } from "@/app/actions/auth/auth";
 import { getInitials } from "@/lib/utils";
+import AccountDetailsForm from "./account-details-form";
 
 export default async function AccountView() {
   const user = await getUser();
@@ -56,59 +54,7 @@ export default async function AccountView() {
         </TabsList>
 
         <TabsContent value="profile">
-          {/* Profile Details Section */}
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <h2 className="mb-6">Profile Details</h2>
-
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div>
-                  <Label htmlFor="firstName" className=" mb-2 block">
-                    First name
-                  </Label>
-                  <Input
-                    id="firstName"
-                    defaultValue="John"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="lastName" className=" mb-2 block">
-                    Last name
-                  </Label>
-                  <Input id="lastName" defaultValue="Doe" className="w-full" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div>
-                  <Label htmlFor="email" className="mb-2 block">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    defaultValue="john@example.com"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="role" className="mb-2 block">
-                    Role
-                  </Label>
-                  <Input
-                    id="role"
-                    defaultValue="Product Designer"
-                    className="w-full"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button className="">Save Changes</Button>
-              </div>
-            </CardContent>
-          </Card>
+          <AccountDetailsForm user={user} />
         </TabsContent>
 
         <TabsContent value="security">
