@@ -9,7 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { logoutAction, User } from "@/app/actions/auth/auth";
+import { logoutAction } from "@/app/actions/auth/auth";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { getInitials } from "@/lib/utils";
+import { User } from "@/app/actions/auth/types";
 
 type NavUserProps = {
   user: User;

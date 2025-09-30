@@ -69,7 +69,7 @@ export async function loginAction(formData: LoginFormData) {
           httpOnly: options.httponly === "true",
           secure:
             process.env.NODE_ENV === "production" || options.secure === "true",
-          sameSite: (options.samesite as any) || "lax",
+          sameSite: (options.samesite as "strict" | "lax" | "none") || "lax",
           path: options.path || "/",
           maxAge: options["max-age"] ? parseInt(options["max-age"]) : undefined,
         });
@@ -152,7 +152,7 @@ export async function signupAction(formData: FormData) {
           httpOnly: options.httponly === "true",
           secure:
             process.env.NODE_ENV === "production" || options.secure === "true",
-          sameSite: (options.samesite as any) || "lax",
+          sameSite: (options.samesite as "strict" | "lax" | "none") || "lax",
           path: options.path || "/",
           maxAge: options["max-age"] ? parseInt(options["max-age"]) : undefined,
         });

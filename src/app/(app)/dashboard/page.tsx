@@ -1,5 +1,3 @@
-import { logoutAction } from "@/app/actions/auth/auth";
-import { Button } from "@/components/ui/button";
 import React from "react";
 
 export default async function DashboardPage() {

@@ -107,7 +107,7 @@ class RestClient {
   // POST request
   async post<T>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     config?: RequestConfig
   ): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
@@ -120,7 +120,7 @@ class RestClient {
   // PUT request
   async put<T>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     config?: RequestConfig
   ): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
@@ -133,7 +133,7 @@ class RestClient {
   // PATCH request
   async patch<T>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     config?: RequestConfig
   ): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
@@ -158,7 +158,7 @@ class RestClient {
   async upload<T>(
     endpoint: string,
     file: File,
-    additionalData?: Record<string, any>
+    additionalData?: Record<string, unknown>
   ): Promise<ApiResponse<T>> {
     const formData = new FormData();
     formData.append("file", file);
